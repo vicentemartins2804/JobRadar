@@ -1,0 +1,39 @@
+@if (loading()) {
+  <p class="state">Loading applications…</p>
+} @else if (error()) {
+  <div class="state state--error">
+    <p>{{ error() }}</p>
+    <button type="button" (click)="load()">Retry</button>
+  </div>
+} @else if (applications().length === 0) {
+  <p class="state">No applications yet.</p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Applied</th>
+        <th>Last update</th>
+        <th>Next step</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (app of applications(); track app.id) {
+        <tr>
+          <td class="company">{{ app.company }}</td>
+          <td>{{ app.role }}</td>
+          <td>
+            <span class="badge" [class]="'badge badge--' + app.status.toLowerCase()">
+              {{ app.status | titlecase }}
+            </span>
+          </td>
+          <td>{{ app.appliedDate | date: 'd MMM y' }}</td>
+          <td>{{ app.lastUpdate | date: 'd MMM y' }}</td>
+          <td class="next-step">{{ app.nextStep ?? '—' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

@@ -1,0 +1,83 @@
+:host {
+  display: block;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+th {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.company {
+  font-weight: 600;
+}
+
+.next-step {
+  color: var(--text-muted);
+  white-space: normal;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  &--applied {
+    background: #e0e7ff;
+    color: #3730a3;
+  }
+  &--screening {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  &--interview {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  &--offer {
+    background: #dcfce7;
+    color: #166534;
+  }
+  &--rejected {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+}
+
+.state {
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+
+  &--error {
+    color: #b91c1c;
+  }
+
+  button {
+    margin-top: 0.75rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+}
