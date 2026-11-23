@@ -1,0 +1,18 @@
+<div class="login">
+  <h2>Sign in</h2>
+  <p>Connect your Outlook account to track your job applications.</p>
+
+  @if (failed) {
+    <p class="error">Login failed. Please try again.</p>
+  }
+
+  <button type="button" (click)="login()">
+    <svg viewBox="0 0 21 21" aria-hidden="true">
+      <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+      <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+      <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+      <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+    </svg>
+    Sign in with Microsoft
+  </button>
+</div>

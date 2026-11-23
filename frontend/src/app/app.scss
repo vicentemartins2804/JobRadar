@@ -6,6 +6,11 @@
 }
 
 header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   margin-bottom: 1.5rem;
 
   h1 {
@@ -16,6 +21,26 @@ header {
   p {
     margin: 0.25rem 0 0;
     color: var(--text-muted);
+  }
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+
+  button {
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+
+    &:hover {
+      background: var(--bg);
+    }
   }
 }
 

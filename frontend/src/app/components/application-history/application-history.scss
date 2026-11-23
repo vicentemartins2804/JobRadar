@@ -1,0 +1,208 @@
+$done: #2563eb;
+$rejected: #dc2626;
+
+:host {
+  display: block;
+}
+
+.stages {
+  display: flex;
+  margin: 0.75rem 0 1.25rem;
+  padding: 0;
+  list-style: none;
+  max-width: 560px;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+
+  /* connector line to the previous stage */
+  &:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+  }
+
+  &--done,
+  &--skipped,
+  &--current {
+    &:not(:first-child)::before {
+      background: $done;
+    }
+  }
+
+  &--rejected:not(:first-child)::before {
+    background: $rejected;
+  }
+}
+
+.stage-dot {
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+
+  .stage--done & {
+    border-color: $done;
+    background: $done;
+  }
+  .stage--skipped & {
+    border-color: $done;
+    border-style: dashed;
+  }
+  .stage--current & {
+    border-color: $done;
+    background: $done;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+  }
+  .stage--rejected & {
+    border-color: $rejected;
+    background: $rejected;
+  }
+}
+
+.stage--current .stage-label {
+  font-weight: 700;
+  color: $done;
+}
+
+.stage--rejected .stage-label {
+  font-weight: 700;
+  color: $rejected;
+}
+
+.timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.event {
+  position: relative;
+  padding: 0 0 1rem 1.25rem;
+  border-left: 2px solid var(--border);
+  font-size: 0.85rem;
+
+  &:last-child {
+    padding-bottom: 0;
+    border-left-color: transparent;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0.2rem;
+    left: -6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: $done;
+  }
+
+  &--rejection::before {
+    background: $rejected;
+  }
+
+  &--offer::before {
+    background: #16a34a;
+  }
+}
+
+.event-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
+
+  time {
+    font-weight: 600;
+  }
+
+  .tag {
+    margin-left: 0;
+  }
+}
+
+.link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: $done;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.edit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem 0.75rem;
+  margin-top: 0.4rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  select,
+  input,
+  button {
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.85rem;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  .primary {
+    border-color: $done;
+    background: $done;
+    color: #fff;
+  }
+}
+
+.edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.save-error {
+  color: $rejected;
+  font-size: 0.8rem;
+}
+
+.hint {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}

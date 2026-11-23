@@ -1,0 +1,40 @@
+.login {
+  padding: 3rem 1rem;
+  text-align: center;
+
+  h2 {
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    margin: 0 0 1.5rem;
+    color: var(--text-muted);
+  }
+
+  .error {
+    color: #b91c1c;
+  }
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--bg);
+  }
+
+  svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+}

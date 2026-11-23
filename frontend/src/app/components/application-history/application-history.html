@@ -1,0 +1,62 @@
+<ol class="stages" aria-label="Application progress">
+  @for (s of stages(); track s.label) {
+    <li [class]="'stage stage--' + s.state">
+      <span class="stage-dot" aria-hidden="true"></span>
+      <span class="stage-label">{{ s.label }}</span>
+    </li>
+  }
+</ol>
+
+<ol class="timeline">
+  @for (e of app().timeline; track e.emailId) {
+    <li [class]="'event event--' + e.status.toLowerCase()">
+      <div class="event-head">
+        <time>{{ e.at | date: 'd MMM y, HH:mm' }}</time>
+        <span [class]="'badge badge--' + e.status.toLowerCase()">{{ statusLabel(e.status) }}</span>
+        @if (e.folder === 'JUNK') {
+          <span class="tag tag--junk">Spam</span>
+        }
+        @if (e.corrected) {
+          <span class="tag tag--edited">Edited</span>
+        }
+        @if (editing() !== e.emailId) {
+          <button type="button" class="link" (click)="edit(e)">Edit</button>
+        }
+      </div>
+
+      @if (editing() === e.emailId) {
+        <form class="edit" (submit)="$event.preventDefault(); save(e.emailId)">
+          <label>
+            Category
+            <select [value]="draftCategory()" (change)="draftCategory.set($any(inputValue($event)))">
+              @for (o of categoryOptions; track o.value) {
+                <option [value]="o.value" [selected]="o.value === draftCategory()">{{ o.label }}</option>
+              }
+            </select>
+          </label>
+          <label>
+            Company
+            <input [value]="draftCompany()" (input)="draftCompany.set(inputValue($event))" />
+          </label>
+          <label>
+            Role
+            <input [value]="draftRole()" (input)="draftRole.set(inputValue($event))" />
+          </label>
+          <div class="edit-actions">
+            <button type="submit" class="primary" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+            <button type="button" (click)="cancel()">Cancel</button>
+            @if (saveError()) {
+              <span class="save-error">Could not save, try again.</span>
+            }
+          </div>
+          <p class="hint">Tip: give two applications the same company and role to merge them.</p>
+        </form>
+      } @else {
+        @if (e.summary) {
+          <div>{{ e.summary }}</div>
+        }
+        <div class="muted">{{ e.emailSubject }}</div>
+      }
+    </li>
+  }
+</ol>

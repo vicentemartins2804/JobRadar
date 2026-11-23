@@ -1,6 +1,15 @@
 <header>
-  <h1>JobRadar</h1>
-  <p>Your job applications at a glance</p>
+  <div>
+    <h1>JobRadar</h1>
+    <p>Your job search, organized from your inbox</p>
+  </div>
+
+  @if (auth.user(); as user) {
+    <div class="user">
+      <span>{{ user.name }}</span>
+      <button type="button" (click)="logout()">Sign out</button>
+    </div>
+  }
 </header>
 
 <main>

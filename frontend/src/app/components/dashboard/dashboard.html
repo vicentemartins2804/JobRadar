@@ -1,0 +1,173 @@
+<div class="toolbar">
+  <p class="sync-info">
+    @if (fetching()) {
+      {{ data()?.lastSyncAt ? 'Checking Outlook for new emails…' : 'Reading the last 3 months of Inbox and Spam…' }}
+    } @else if (analyzing()) {
+      Analyzing emails with AI… {{ data()!.sync.analyzed + data()!.sync.failed }} of {{ data()!.sync.total }}
+    } @else if (data()?.lastSyncAt) {
+      Last sync {{ data()!.lastSyncAt | date: 'd MMM, HH:mm' }} · {{ data()!.emailsAnalyzed }} emails analyzed
+      @if (data()!.sync.failed > 0) {
+        · <span class="warn">{{ data()!.sync.failed }} failed, will retry on next sync</span>
+      }
+    } @else if (!loading()) {
+      Not synced yet
+    }
+  </p>
+  <div class="actions">
+    <label class="auto-sync" title="While this page is open, check Outlook for new emails every 15 minutes">
+      <input type="checkbox" [checked]="autoSync()" (change)="setAutoSync($any($event.target).checked)" />
+      Auto-sync
+    </label>
+    <button type="button" class="sync" (click)="sync()" [disabled]="busy() || loading()">
+      {{ busy() ? 'Syncing…' : 'Sync emails' }}
+    </button>
+  </div>
+</div>
+
+@if (analyzing()) {
+  <div class="progress" role="progressbar" [attr.aria-valuenow]="progressPercent()" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-bar" [style.width.%]="progressPercent()"></div>
+  </div>
+}
+
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+
+@if (loading()) {
+  <p class="empty">Loading…</p>
+} @else if (data(); as d) {
+  <section>
+    <h2>Interviews <span class="count">{{ d.interviews.length }}</span></h2>
+    @if (d.interviews.length === 0) {
+      <p class="empty">No interviews found.</p>
+    } @else {
+      <ul class="cards">
+        @for (i of d.interviews; track $index) {
+          <li class="card">
+            <div class="card-top">
+              <strong>
+                {{ i.company }}
+                @if (i.folder === 'JUNK') {
+                  <span class="tag tag--junk">Spam</span>
+                }
+              </strong>
+              <button
+                type="button"
+                class="hide"
+                title="Not a real interview: hide this email"
+                (click)="hideEmail(i.emailId)"
+              >
+                Hide
+              </button>
+            </div>
+            @if (i.role) {
+              <div>{{ i.role }}</div>
+            }
+            <div class="when">
+              {{ i.interviewAt ? (i.interviewAt | date: 'EEE d MMM, HH:mm') : 'Date not set' }}
+            </div>
+            @if (i.nextStep) {
+              <div class="next">→ {{ i.nextStep }}</div>
+            }
+            <div class="muted">{{ i.summary }}</div>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section>
+    <h2>Applications <span class="count">{{ d.applications.length }}</span></h2>
+    @if (d.applications.length === 0) {
+      <p class="empty">No applications found.</p>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Last update</th>
+              <th>Next step</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (a of d.applications; track $index) {
+              <tr class="app-row" [class.open]="isExpanded(a)" (click)="toggle(a)">
+                <td class="strong">
+                  <button
+                    type="button"
+                    class="expand"
+                    [attr.aria-expanded]="isExpanded(a)"
+                    [attr.aria-label]="'Show history for ' + a.company"
+                    (click)="$event.stopPropagation(); toggle(a)"
+                  >
+                    <span class="chevron" aria-hidden="true">›</span>
+                  </button>
+                  {{ a.company }}
+                  @if (a.foundInJunk) {
+                    <span class="tag tag--junk">Spam</span>
+                  }
+                </td>
+                <td>{{ a.role || '—' }}</td>
+                <td>
+                  <span [class]="'badge badge--' + a.status.toLowerCase()">{{ statusLabel(a.status) }}</span>
+                </td>
+                <td>{{ a.lastUpdateAt | date: 'd MMM y' }}</td>
+                <td class="muted wrap">{{ a.nextStep || '—' }}</td>
+              </tr>
+              @if (isExpanded(a)) {
+                <tr class="history-row">
+                  <td colspan="5">
+                    <app-application-history [app]="a" (changed)="data.set($event)" />
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+
+  <section>
+    <h2>Job openings <span class="count">{{ d.openings.length }}</span></h2>
+    @if (d.openings.length === 0) {
+      <p class="empty">No job openings found.</p>
+    } @else {
+      <ul class="openings">
+        @for (o of d.openings; track $index) {
+          <li>
+            <div>
+              <div class="strong">
+                {{ o.role }}
+                @if (o.folder === 'JUNK') {
+                  <span class="tag tag--junk">Spam</span>
+                }
+              </div>
+              <div class="muted">
+                {{ o.company || 'Unknown company' }}@if (o.location) { · {{ o.location }}}
+                · {{ o.receivedAt | date: 'd MMM' }}
+              </div>
+            </div>
+            <div class="opening-actions">
+              @if (isWebLink(o.url)) {
+                <a [href]="o.url" target="_blank" rel="noopener noreferrer">View job</a>
+              }
+              <button
+                type="button"
+                class="hide"
+                title="Not a real job alert: hide every job from this email"
+                (click)="hideEmail(o.emailId)"
+              >
+                Hide
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+}

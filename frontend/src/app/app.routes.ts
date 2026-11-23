@@ -1,8 +1,11 @@
 import { Routes } from '@angular/router';
 
-import { ApplicationList } from './components/application-list/application-list';
+import { Dashboard } from './components/dashboard/dashboard';
+import { Login } from './components/login/login';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: ApplicationList },
+  { path: 'login', component: Login },
+  { path: '', component: Dashboard, canActivate: [authGuard] },
   { path: '**', redirectTo: '' }
 ];
